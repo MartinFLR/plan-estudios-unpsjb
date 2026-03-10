@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import MateriaCard from "./MateriaCard";
-import PopupOptativas from "./PopupOptativas";
+import ModalSeleccionOptativa from "./ModalSeleccionOptativa";
 import { Materia, EstadoMateria } from "../types";
 import {
     obtenerMateriasVisibles,
@@ -20,6 +20,8 @@ export interface DiagramaPlanProps {
     getEstado: (codigo: string) => EstadoMateria;
     handleCicloEstado: (codigo: string) => void;
     estaDesbloqueada: (codigo: string) => boolean;
+    getOptativaElegida: (grupo: string) => string | undefined;
+    setOptativaElegida: (grupo: string, codigo: string) => void;
 }
 
 export default function DiagramaPlan({
@@ -27,28 +29,41 @@ export default function DiagramaPlan({
     getEstado,
     handleCicloEstado,
     estaDesbloqueada,
+    getOptativaElegida,
+    setOptativaElegida,
 }: DiagramaPlanProps) {
     const refContenedor = useRef<HTMLDivElement>(null);
     const refsTarjetas = useRef<Map<string, HTMLDivElement>>(new Map());
     const [materiaSeleccionada, setMateriaSeleccionada] = useState<string | null>(null);
+    const [modalOptativa, setModalOptativa] = useState<{ grupo: string; optativasPosibles: any[] } | null>(null);
     const [flechas, setFlechas] = useState<
         { x1: number; y1: number; x2: number; y2: number; from: string; to: string }[]
     >([]);
-    const [popupOptativas, setPopupOptativas] = useState<{
-        grupo: string;
-        x: number;
-        y: number;
-    } | null>(null);
     const [tamanoSvg, setTamanoSvg] = useState({ width: 0, height: 0 });
 
-    const materiasVisibles = useMemo(() => obtenerMateriasVisibles(materias), [materias]);
+    const materiasVisibles = useMemo(() => {
+        const visibles = obtenerMateriasVisibles(materias);
+        return visibles.map(m => {
+            if (m.esOptativa && m.grupoOptativa && getOptativaElegida) {
+                const optCodigo = getOptativaElegida(m.grupoOptativa);
+                if (optCodigo) {
+                    const optDetalles = materias.find(opt => opt.codigo === optCodigo);
+                    if (optDetalles) {
+                        return { ...m, correlativas: optDetalles.correlativas };
+                    }
+                }
+            }
+            return m;
+        });
+    }, [materias, getOptativaElegida]);
+
     const materiasOptativas = useMemo(() => obtenerMateriasOptativas(materias), [materias]);
     const agrupadas = useMemo(() => agruparMateriasPorCuatrimestre(materiasVisibles), [materiasVisibles]);
     const clavesOrdenadas = useMemo(() => ordenarClavesGrupos(agrupadas), [agrupadas]);
     const datosFlechas = useMemo(() => calcularDatosFlechas(materiasVisibles), [materiasVisibles]);
 
-    const materiasPorCodigo = useMemo(() => crearMapaMaterias(materias), [materias]);
-    const mapaDependientes = useMemo(() => crearMapaDependientes(materias), [materias]);
+    const materiasPorCodigo = useMemo(() => crearMapaMaterias(materiasVisibles), [materiasVisibles]);
+    const mapaDependientes = useMemo(() => crearMapaDependientes(materiasVisibles), [materiasVisibles]);
 
     const materiasDestacadas = useMemo(() => {
         if (!materiaSeleccionada) return new Set<string>();
@@ -108,14 +123,6 @@ export default function DiagramaPlan({
         setMateriaSeleccionada((prev) => (prev === codigo ? null : codigo));
     };
 
-    const handleMostrarOptativas = (grupo: string) => {
-        const el = refsTarjetas.current.get(grupo === "optativa1" ? "OP1" : "OP2");
-        if (el) {
-            const rect = el.getBoundingClientRect();
-            setPopupOptativas({ grupo, x: rect.left, y: rect.bottom });
-        }
-    };
-
     const setRefTarjeta = useCallback(
         (codigo: string) => (el: HTMLDivElement | null) => {
             if (el) {
@@ -144,7 +151,7 @@ export default function DiagramaPlan({
             if (!materiaSeleccionada) return;
 
             const target = e.target as HTMLElement;
-            if (target.closest('[data-codigo]') || target.closest('.optativas-popup')) {
+            if (target.closest('[data-codigo]') || target.closest('button[title="Ver optativas disponibles"]')) {
                 return;
             }
 
@@ -242,6 +249,8 @@ export default function DiagramaPlan({
                                         materiaSeleccionada !== null && !isSeleccionada && !isDestacada;
                                     const isBloqueada = !estaDesbloqueada(materia.codigo);
 
+                                    const optativasPosibles = materia.esOptativa ? materiasOptativas.filter(m => m.grupoOptativa === materia.grupoOptativa) : [];
+
                                     return (
                                         <MateriaCard
                                             key={materia.codigo}
@@ -253,8 +262,11 @@ export default function DiagramaPlan({
                                             isBloqueada={isBloqueada}
                                             onSeleccionar={handleSeleccion}
                                             onCiclarEstado={handleCicloEstado}
-                                            onMostrarOptativas={handleMostrarOptativas}
                                             refTarjeta={setRefTarjeta(materia.codigo)}
+                                            optativasPosibles={optativasPosibles}
+                                            getEstadoInfo={getEstado}
+                                            getOptativaElegida={getOptativaElegida}
+                                            onAbrirModalOptativa={(grupo, opts) => setModalOptativa({ grupo, optativasPosibles: opts })}
                                         />
                                     );
                                 })}
@@ -264,16 +276,16 @@ export default function DiagramaPlan({
                 })}
             </div>
 
-            {popupOptativas && (
-                <PopupOptativas
-                    grupo={popupOptativas.grupo}
-                    optativas={materiasOptativas.filter(
-                        (m) => m.grupoOptativa === popupOptativas.grupo
-                    )}
-                    posicion={{ x: popupOptativas.x, y: popupOptativas.y }}
-                    onCerrar={() => setPopupOptativas(null)}
-                    onSeleccionar={handleSeleccion}
-                    getEstado={getEstado}
+            {modalOptativa && (
+                <ModalSeleccionOptativa
+                    grupo={modalOptativa.grupo}
+                    optativas={modalOptativa.optativasPosibles}
+                    estaDesbloqueada={estaDesbloqueada}
+                    onClose={() => setModalOptativa(null)}
+                    onSelect={(codigo) => {
+                        setOptativaElegida(modalOptativa.grupo, codigo);
+                        setModalOptativa(null);
+                    }}
                 />
             )}
         </div>

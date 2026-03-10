@@ -19,6 +19,8 @@ export default function Home() {
     handleCicloEstado,
     setCarrera,
     estaDesbloqueada,
+    getOptativaElegida,
+    setOptativaElegida,
   } = useProgresoUsuario();
 
   const [mounted, setMounted] = useState(false);
@@ -70,6 +72,8 @@ export default function Home() {
             getEstado={getEstado}
             handleCicloEstado={handleCicloEstado}
             estaDesbloqueada={(codigo) => estaDesbloqueada(codigo, carreraSeleccionada.materias)}
+            getOptativaElegida={getOptativaElegida}
+            setOptativaElegida={setOptativaElegida}
           />
           {carreraSeleccionada.requisitos && carreraSeleccionada.requisitos.length > 0 && (
             <SeccionRequisitos

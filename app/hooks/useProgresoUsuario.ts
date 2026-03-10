@@ -7,21 +7,26 @@ interface ProgresoUsuario {
     carreraId: string | null;
     facultad: string | null;
     materias: Record<string, EstadoMateria>;
+    optativas: Record<string, string>;
 }
 
 const STORAGE_KEY = "plan-estudios-progress";
 
 function cargarProgreso(): ProgresoUsuario {
     if (typeof window === "undefined") {
-        return { carreraId: null, facultad: null, materias: {} };
+        return { carreraId: null, facultad: null, materias: {}, optativas: {} };
     }
     try {
         const guardado = localStorage.getItem(STORAGE_KEY);
         if (guardado) {
-            return JSON.parse(guardado);
+            const parsed = JSON.parse(guardado);
+            return {
+                ...parsed,
+                optativas: parsed.optativas || {},
+            };
         }
     } catch { }
-    return { carreraId: null, facultad: null, materias: {} };
+    return { carreraId: null, facultad: null, materias: {}, optativas: {} };
 }
 
 function guardarProgreso(progreso: ProgresoUsuario) {
@@ -34,6 +39,7 @@ export function useProgresoUsuario() {
         carreraId: null,
         facultad: null,
         materias: {},
+        optativas: {},
     });
 
     const isFirstRender = useRef(true);
@@ -84,6 +90,23 @@ export function useProgresoUsuario() {
         actualizarProgreso((prev) => ({ ...prev, carreraId, facultad }));
     }, [actualizarProgreso]);
 
+    const getOptativaElegida = useCallback(
+        (grupo: string): string | undefined => {
+            return progreso.optativas[grupo];
+        },
+        [progreso.optativas]
+    );
+
+    const setOptativaElegida = useCallback(
+        (grupo: string, codigoMateria: string) => {
+            actualizarProgreso((prev) => ({
+                ...prev,
+                optativas: { ...prev.optativas, [grupo]: codigoMateria },
+            }));
+        },
+        [actualizarProgreso]
+    );
+
     const puedeCursar = useCallback(
         (
             correlativas: string[],
@@ -101,13 +124,27 @@ export function useProgresoUsuario() {
     const estaDesbloqueada = useCallback(
         (codigo: string, materias: Materia[]): boolean => {
             const materia = materias.find((m) => m.codigo === codigo);
-            if (!materia || !materia.correlativas || materia.correlativas.length === 0) return true;
-            return materia.correlativas.every((cod) => {
+            if (!materia) return true;
+
+            let correlativasAevaluar = materia.correlativas || [];
+
+            if (materia.codigo === "OP1" || materia.codigo === "OP2") {
+                const optCodigoElegida = progreso.optativas[materia.grupoOptativa!];
+                if (!optCodigoElegida) return true;
+                const optDetalles = materias.find(m => m.codigo === optCodigoElegida);
+                if (optDetalles) {
+                    correlativasAevaluar = optDetalles.correlativas || [];
+                }
+            }
+
+            if (correlativasAevaluar.length === 0) return true;
+
+            return correlativasAevaluar.every((cod) => {
                 const estado = progreso.materias[cod] || "pendiente";
                 return estado === "aprobada" || estado === "regular";
             });
         },
-        [progreso.materias]
+        [progreso.materias, progreso.optativas]
     );
 
     const isPrimeraVez = progreso.carreraId === null;
@@ -120,5 +157,7 @@ export function useProgresoUsuario() {
         puedeCursar,
         estaDesbloqueada,
         isPrimeraVez,
+        getOptativaElegida,
+        setOptativaElegida,
     };
 }
