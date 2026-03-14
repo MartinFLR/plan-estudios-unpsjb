@@ -44,7 +44,7 @@ function useNumeroAnimado(objetivo: number, duracion = 800) {
 }
 
 export default function WidgetProgreso({ materias, requisitos = [], getEstado }: WidgetProgresoProps) {
-    const { aprobadas, total, pct } = useMemo(() => {
+    const { aprobadas, total, pct, finalesPendientes } = useMemo(() => {
         const regulares = materias.filter((m) => !m.esOptativa);
 
         const grupos = [
@@ -78,9 +78,17 @@ export default function WidgetProgreso({ materias, requisitos = [], getEstado }:
             (r) => getEstado(r.codigo) === "aprobada"
         ).length;
 
+        let pendientes = 0;
+        materias.forEach(m => {
+            if (getEstado(m.codigo) === "regular") pendientes++;
+        });
+        requisitos.forEach(r => {
+            if (getEstado(r.codigo) === "regular") pendientes++;
+        });
+
         const cursadasAprobadas = aprobRegulares + aprobOptativas + aprobRequisitos;
         const porcentaje = totalItems === 0 ? 0 : Math.round((cursadasAprobadas / totalItems) * 100);
-        return { aprobadas: cursadasAprobadas, total: totalItems, pct: porcentaje };
+        return { aprobadas: cursadasAprobadas, total: totalItems, pct: porcentaje, finalesPendientes: pendientes };
     }, [materias, requisitos, getEstado]);
 
     const pctAnimado = useNumeroAnimado(pct);
@@ -105,6 +113,19 @@ export default function WidgetProgreso({ materias, requisitos = [], getEstado }:
                             style={{ width: `${pct}%` }}
                         />
                     </div>
+                    {(aprobadas > 0 || finalesPendientes > 0) && (
+                        <p className="mt-0.5 text-[10px] sm:text-xs">
+                            {finalesPendientes > 0 ? (
+                                <span className="font-medium text-amber-500">
+                                    ¡Tenés {finalesPendientes} {finalesPendientes === 1 ? 'final pendiente' : 'finales pendientes'}!
+                                </span>
+                            ) : (
+                                <span className="font-medium text-emerald-500">
+                                    ¡Estas al dia con tus finales!
+                                </span>
+                            )}
+                        </p>
+                    )}
                 </div>
             </div>
 
@@ -128,6 +149,19 @@ export default function WidgetProgreso({ materias, requisitos = [], getEstado }:
                             style={{ width: `${pct}%` }}
                         />
                     </div>
+                    {(aprobadas > 0 || finalesPendientes > 0) && (
+                        <p className="text-[11px] md:text-xs">
+                            {finalesPendientes > 0 ? (
+                                <span className="font-medium text-amber-500">
+                                    ¡Tenés {finalesPendientes} {finalesPendientes === 1 ? 'final pendiente' : 'finales pendientes'}!
+                                </span>
+                            ) : (
+                                <span className="font-medium text-emerald-500">
+                                    ¡Estas al dia con tus finales!
+                                </span>
+                            )}
+                        </p>
+                    )}
                 </div>
 
                 <div className="shrink-0 text-sm text-slate-400">
