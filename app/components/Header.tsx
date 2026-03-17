@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import type { Carrera } from "../types";
 import { ContactModal, CodeModal } from "./ModalInfo";
+import { FACULTAD_NOMBRES } from "../data";
 
 export interface HeaderProps {
     carreras: Carrera[];
@@ -17,7 +18,9 @@ export default function Header({
     onSeleccionarCarrera,
     onLimpiarCarrera,
 }: HeaderProps) {
-    const facultades = [...new Set(carreras.map((c) => c.facultad))].sort((a, b) => a.localeCompare(b, "es"));
+    const facultades = [...new Set(carreras.map((c) => c.facultad))].sort((a, b) => 
+        (FACULTAD_NOMBRES[a] || a).localeCompare(FACULTAD_NOMBRES[b] || b, "es")
+    );
     const [facultadSeleccionada, setFacultadSeleccionada] = useState<string>(
         carreraSeleccionada?.facultad || facultades.includes("Facultad de Ciencias Naturales y Ciencias de la Salud") ? "Facultad de Ciencias Naturales y Ciencias de la Salud" : facultades[0] || ""
     );
@@ -67,7 +70,7 @@ export default function Header({
                         >
                             {facultades.map((f) => (
                                 <option key={f} value={f}>
-                                    {f}
+                                    {FACULTAD_NOMBRES[f] || f}
                                 </option>
                             ))}
                         </select>

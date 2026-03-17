@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Carrera } from "../types";
+import { FACULTAD_NOMBRES } from "../data";
 
 export interface ModalBienvenidaProps {
     carreras: Carrera[];
@@ -12,7 +13,9 @@ export default function ModalBienvenida({
     carreras,
     onSeleccionar,
 }: ModalBienvenidaProps) {
-    const facultades = [...new Set(carreras.map((c) => c.facultad))].sort((a, b) => a.localeCompare(b));
+    const facultades = [...new Set(carreras.map((c) => c.facultad))].sort((a, b) => 
+        (FACULTAD_NOMBRES[a] || a).localeCompare(FACULTAD_NOMBRES[b] || b)
+    );
     const [facultadSeleccionada, setFacultadSeleccionada] = useState("");
     const [nombreCarreraSeleccionada, setNombreCarreraSeleccionada] = useState("");
 
@@ -57,7 +60,7 @@ export default function ModalBienvenida({
                         <option value="">Seleccionar facultad...</option>
                         {facultades.map((f) => (
                             <option key={f} value={f}>
-                                {f}
+                                {FACULTAD_NOMBRES[f] || f}
                             </option>
                         ))}
                     </select>
