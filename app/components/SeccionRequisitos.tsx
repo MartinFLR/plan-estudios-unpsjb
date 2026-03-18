@@ -1,7 +1,7 @@
 "use client";
 
 import type { RequisitoComplementario, EstadoMateria } from "../types";
-
+import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined';
 const ETIQUETAS_ESTADO: Record<EstadoMateria, string> = {
     pendiente: "Pendiente",
     regular: "En curso",
@@ -72,7 +72,7 @@ export default function SeccionRequisitos({
                                     </span>
                                     <button
                                         onClick={() => handleCicloEstado(req.codigo)}
-                                        className={`rounded-md px-2.5 py-1 text-xs font-semibold border min-w-[36px] text-center transition-colors ${estado === "pendiente"
+                                        className={`flex items-center justify-center rounded-md px-2.5 py-1 text-xs font-semibold border min-w-[36px] text-center transition-colors ${estado === "pendiente"
                                             ? "border-slate-600 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
                                             : estado === "regular"
                                                 ? "border-amber-600/50 text-amber-400 hover:bg-amber-900/30"
@@ -80,7 +80,7 @@ export default function SeccionRequisitos({
                                             }`}
                                         title={`Cambiar a ${ETIQUETAS_ESTADO[SIGUIENTE_ESTADO[estado]]}`}
                                     >
-                                        ⟳
+                                        <SyncOutlinedIcon fontSize="inherit" />
                                     </button>
                                 </div>
                             </div>

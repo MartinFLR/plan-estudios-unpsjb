@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined';
 import { EstadoMateria } from "../types";
 
 export interface DatosMateria {
@@ -178,13 +179,13 @@ export default function MateriaCard({
                                         onAbrirModalOptativa(materia.grupoOptativa, optativasPosibles);
                                     }
                                 }}
-                                className={`rounded px-1.5 py-0.5 text-[10px] font-serif font-bold italic
+                                className={`flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-serif font-bold italic
                   transition-colors border min-w-[24px] text-center md:rounded-md md:px-2.5 md:py-1 md:text-xs md:min-w-[36px]
                   border-slate-600 text-slate-400 hover:bg-slate-700 hover:text-slate-200
                 `}
                                 title="Cambiar optativa"
                             >
-                                ⚙
+                                <SettingsOutlinedIcon fontSize="inherit" />
                             </button>
                         )}
                         <button
@@ -195,7 +196,7 @@ export default function MateriaCard({
                                 }
                             }}
                             disabled={Boolean(isBloqueada || (isOptativa && !optativaDetalles))}
-                            className={`rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide 
+                            className={`flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide 
                   transition-colors border min-w-[24px] text-center md:rounded-md md:px-2.5 md:py-1 md:text-xs md:min-w-[36px]
                   ${(isBloqueada || (isOptativa && !optativaDetalles))
                                     ? "border-slate-800 text-slate-600 cursor-not-allowed opacity-50"
@@ -208,7 +209,7 @@ export default function MateriaCard({
                 `}
                             title={isBloqueada ? "Materia bloqueada por correlativas" : `Cambiar a ${ETIQUETAS_ESTADO[SIGUIENTE_ESTADO[estadoMostrar]]}`}
                         >
-                            ⟳
+                            <SyncOutlinedIcon fontSize="inherit" />
                         </button>
                     </div>
                 </div>
