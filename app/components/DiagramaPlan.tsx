@@ -35,7 +35,7 @@ export default function DiagramaPlan({
     const refContenedor = useRef<HTMLDivElement>(null);
     const refsTarjetas = useRef<Map<string, HTMLDivElement>>(new Map());
     const [materiaSeleccionada, setMateriaSeleccionada] = useState<string | null>(null);
-    const [modalOptativa, setModalOptativa] = useState<{ grupo: string; optativasPosibles: any[] } | null>(null);
+    const [modalOptativa, setModalOptativa] = useState<{ slotCodigo: string; grupo: string; optativasPosibles: any[] } | null>(null);
     const [flechas, setFlechas] = useState<
         { x1: number; y1: number; x2: number; y2: number; from: string; to: string }[]
     >([]);
@@ -45,7 +45,7 @@ export default function DiagramaPlan({
         const visibles = obtenerMateriasVisibles(materias);
         return visibles.map(m => {
             if (m.esOptativa && m.grupoOptativa && getOptativaElegida) {
-                const optCodigo = getOptativaElegida(m.grupoOptativa);
+                const optCodigo = getOptativaElegida(m.codigo);
                 if (optCodigo) {
                     const optDetalles = materias.find(opt => opt.codigo === optCodigo);
                     if (optDetalles) {
@@ -266,7 +266,7 @@ export default function DiagramaPlan({
                                             optativasPosibles={optativasPosibles}
                                             getEstadoInfo={getEstado}
                                             getOptativaElegida={getOptativaElegida}
-                                            onAbrirModalOptativa={(grupo, opts) => setModalOptativa({ grupo, optativasPosibles: opts })}
+                                            onAbrirModalOptativa={(slotCodigo, grupo, opts) => setModalOptativa({ slotCodigo, grupo, optativasPosibles: opts })}
                                         />
                                     );
                                 })}
@@ -283,7 +283,7 @@ export default function DiagramaPlan({
                     estaDesbloqueada={estaDesbloqueada}
                     onClose={() => setModalOptativa(null)}
                     onSelect={(codigo) => {
-                        setOptativaElegida(modalOptativa.grupo, codigo);
+                        setOptativaElegida(modalOptativa.slotCodigo, codigo);
                         setModalOptativa(null);
                     }}
                 />

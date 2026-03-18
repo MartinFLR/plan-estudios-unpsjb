@@ -32,8 +32,8 @@ export interface MateriaCardProps {
     refTarjeta: (el: HTMLDivElement | null) => void;
     optativasPosibles?: OptativaPosible[];
     getEstadoInfo?: (codigo: string) => EstadoMateria;
-    getOptativaElegida?: (grupo: string) => string | undefined;
-    onAbrirModalOptativa?: (grupo: string, optativas: OptativaPosible[]) => void;
+    getOptativaElegida?: (slotCodigo: string) => string | undefined;
+    onAbrirModalOptativa?: (slotCodigo: string, grupo: string, optativas: OptativaPosible[]) => void;
 }
 
 const ETIQUETAS_ESTADO: Record<EstadoMateria, string> = {
@@ -70,7 +70,7 @@ export default function MateriaCard({
     onAbrirModalOptativa,
 }: MateriaCardProps) {
     const isOptativa = materia.esOptativa && materia.grupoOptativa;
-    const codigoOptElegida = isOptativa && getOptativaElegida ? getOptativaElegida(materia.grupoOptativa!) : undefined;
+    const codigoOptElegida = isOptativa && getOptativaElegida ? getOptativaElegida(materia.codigo) : undefined;
 
     const optativaDetalles = codigoOptElegida && optativasPosibles
         ? optativasPosibles.find(omp => omp.codigo === codigoOptElegida)
@@ -158,7 +158,7 @@ export default function MateriaCard({
                             onClick={(e) => {
                                 e.stopPropagation();
                                 if (onAbrirModalOptativa && materia.grupoOptativa && optativasPosibles) {
-                                    onAbrirModalOptativa(materia.grupoOptativa, optativasPosibles);
+                                    onAbrirModalOptativa(materia.codigo, materia.grupoOptativa, optativasPosibles);
                                 }
                             }}
                             className="rounded-lg border border-cyan-500/50 bg-cyan-50 px-3 py-1.5 text-xs font-medium normal-case tracking-normal text-cyan-700 shadow-sm transition-colors hover:bg-cyan-100 active:scale-95 dark:bg-cyan-950/30 dark:text-cyan-400 dark:hover:bg-cyan-900/40 dark:hover:text-cyan-300"
@@ -180,7 +180,7 @@ export default function MateriaCard({
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     if (onAbrirModalOptativa && materia.grupoOptativa && optativasPosibles) {
-                                        onAbrirModalOptativa(materia.grupoOptativa, optativasPosibles);
+                                        onAbrirModalOptativa(materia.codigo, materia.grupoOptativa, optativasPosibles);
                                     }
                                 }}
                                 className={`flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-serif font-bold italic

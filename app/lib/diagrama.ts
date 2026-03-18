@@ -2,13 +2,13 @@ import { Materia } from "../types";
 
 export function obtenerMateriasVisibles(materias: Materia[]): Materia[] {
     return materias.filter(
-        (m) => !m.esOptativa || m.codigo === "OP1" || m.codigo === "OP2"
+        (m) => !m.esOptativa || /^(optativa|electiva|actividades|asignatura)/i.test(m.nombre)
     );
 }
 
 export function obtenerMateriasOptativas(materias: Materia[]): Materia[] {
     return materias.filter(
-        (m) => m.esOptativa && m.codigo !== "OP1" && m.codigo !== "OP2"
+        (m) => m.esOptativa && !/^(optativa|electiva|actividades|asignatura)/i.test(m.nombre)
     );
 }
 

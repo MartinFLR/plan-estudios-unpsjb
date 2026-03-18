@@ -91,17 +91,17 @@ export function useProgresoUsuario() {
     }, [actualizarProgreso]);
 
     const getOptativaElegida = useCallback(
-        (grupo: string): string | undefined => {
-            return progreso.optativas[grupo];
+        (slotCodigo: string): string | undefined => {
+            return progreso.optativas[slotCodigo];
         },
         [progreso.optativas]
     );
 
     const setOptativaElegida = useCallback(
-        (grupo: string, codigoMateria: string) => {
+        (slotCodigo: string, codigoMateria: string) => {
             actualizarProgreso((prev) => ({
                 ...prev,
-                optativas: { ...prev.optativas, [grupo]: codigoMateria },
+                optativas: { ...prev.optativas, [slotCodigo]: codigoMateria },
             }));
         },
         [actualizarProgreso]
@@ -128,8 +128,9 @@ export function useProgresoUsuario() {
 
             let correlativasAevaluar = materia.correlativas || [];
 
-            if (materia.codigo === "OP1" || materia.codigo === "OP2") {
-                const optCodigoElegida = progreso.optativas[materia.grupoOptativa!];
+            const esSlot = /^(optativa|electiva|actividades|asignatura)/i.test(materia.nombre);
+            if (materia.esOptativa && esSlot && materia.grupoOptativa) {
+                const optCodigoElegida = progreso.optativas[materia.codigo];
                 if (!optCodigoElegida) return true;
                 const optDetalles = materias.find(m => m.codigo === optCodigoElegida);
                 if (optDetalles) {
