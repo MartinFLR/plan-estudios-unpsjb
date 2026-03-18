@@ -46,11 +46,11 @@ export default function Home() {
   };
 
   if (!mounted) {
-    return <div className="min-h-screen bg-black" />;
+    return <div className="min-h-screen bg-slate-50 dark:bg-black" />;
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-slate-50 dark:bg-black">
       {showBienvenida && (
         <ModalBienvenida
           carreras={carreras}

@@ -94,20 +94,20 @@ export default function WidgetProgreso({ materias, requisitos = [], getEstado }:
     const pctAnimado = useNumeroAnimado(pct);
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-700/60 bg-black/95 px-4 py-4 backdrop-blur-md
+        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-300 bg-white/95 px-4 py-4 backdrop-blur-md dark:border-slate-700/60 dark:bg-black/95
             md:flex md:h-[80px] md:items-center md:justify-between md:px-8">
             <div className="flex items-center gap-3 md:hidden">
                 <div className="flex items-baseline gap-0.5">
-                    <span className="text-4xl font-bold tabular-nums leading-none text-emerald-400">
+                    <span className="text-4xl font-bold tabular-nums leading-none text-emerald-600 dark:text-emerald-400">
                         {pctAnimado}
                     </span>
-                    <span className="text-lg font-semibold text-emerald-500/70">%</span>
+                    <span className="text-lg font-semibold text-emerald-600/70 dark:text-emerald-500/70">%</span>
                 </div>
                 <div className="flex flex-1 flex-col gap-1">
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-600 dark:text-slate-500">
                         {aprobadas}/{total} aprobadas
                     </p>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                         <div
                             className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-green-400 transition-all duration-700 ease-out"
                             style={{ width: `${pct}%` }}
@@ -135,15 +135,15 @@ export default function WidgetProgreso({ materias, requisitos = [], getEstado }:
                         Avance
                     </p>
                     <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-bold tabular-nums leading-none text-emerald-400">
+                        <span className="text-4xl font-bold tabular-nums leading-none text-emerald-600 dark:text-emerald-400">
                             {pctAnimado}
                         </span>
-                        <span className="text-lg font-semibold text-emerald-500/70">%</span>
+                        <span className="text-lg font-semibold text-emerald-600/70 dark:text-emerald-500/70">%</span>
                     </div>
                 </div>
 
                 <div className="flex flex-1 flex-col justify-center gap-1.5">
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                         <div
                             className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-green-400 transition-all duration-700 ease-out"
                             style={{ width: `${pct}%` }}
@@ -152,11 +152,11 @@ export default function WidgetProgreso({ materias, requisitos = [], getEstado }:
                     {(aprobadas > 0 || finalesPendientes > 0) && (
                         <p className="text-[11px] md:text-xs">
                             {finalesPendientes > 0 ? (
-                                <span className="font-medium text-amber-500">
+                                <span className="font-medium text-amber-600 dark:text-amber-500">
                                     ¡Tenés {finalesPendientes} {finalesPendientes === 1 ? 'final pendiente' : 'finales pendientes'}!
                                 </span>
                             ) : (
-                                <span className="font-medium text-emerald-500">
+                                <span className="font-medium text-emerald-600 dark:text-emerald-500">
                                     ¡Estas al dia con tus finales!
                                 </span>
                             )}
@@ -164,8 +164,8 @@ export default function WidgetProgreso({ materias, requisitos = [], getEstado }:
                     )}
                 </div>
 
-                <div className="shrink-0 text-sm text-slate-400">
-                    <span className="font-semibold text-slate-200">{aprobadas}</span> de {total} materias aprobadas
+                <div className="shrink-0 text-sm text-slate-600 dark:text-slate-400">
+                    <span className="font-semibold text-slate-900 dark:text-slate-200">{aprobadas}</span> de {total} materias aprobadas
                 </div>
             </div>
         </div>
