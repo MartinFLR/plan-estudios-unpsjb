@@ -170,7 +170,7 @@ export default function DiagramaPlan({
     return (
         <div ref={refContenedor} className="relative w-full overflow-clip px-2 pb-24 md:pb-32">
             <svg
-                className="pointer-events-none absolute top-0 left-0"
+                className={`pointer-events-none absolute top-0 left-0 transition-all duration-300 ${materiaSeleccionada ? "z-10" : "z-0"}`}
                 style={{
                     width: tamanoSvg.width || "100%",
                     height: tamanoSvg.height || "100%",
@@ -224,7 +224,7 @@ export default function DiagramaPlan({
                 })}
             </svg>
 
-            <div className="relative z-[2] flex w-full flex-col gap-8 pt-4 md:gap-14 md:pt-6">
+            <div className="relative flex w-full flex-col gap-8 pt-4 md:gap-14 md:pt-6">
                 {clavesOrdenadas.map((key) => {
                     const [anio, cuatri] = key.split("-").map(Number);
                     const materiasEnGrupo = agrupadas[key];
@@ -232,10 +232,10 @@ export default function DiagramaPlan({
                     return (
                         <div key={key} className="flex w-full flex-col gap-0.5 md:flex-row md:items-start md:gap-3">
                             <div className="flex shrink-0 flex-row items-baseline gap-1.5 md:w-16 md:flex-col md:items-center md:pt-3 md:text-center">
-                                <span className="text-lg font-bold text-cyan-400/80 md:text-3xl">
+                                <span className="text-lg font-bold text-cyan-600 dark:text-cyan-400/80 md:text-3xl">
                                     {anio}°
                                 </span>
-                                <span className="text-[9px] uppercase tracking-wider text-slate-400 md:text-[11px] md:tracking-widest">
+                                <span className="text-[9px] uppercase tracking-wider text-slate-500 dark:text-slate-400 md:text-[11px] md:tracking-widest">
                                     {cuatri === 0 ? "Anual" : cuatri === 1 ? "1er Cuat" : "2do Cuat"}
                                 </span>
                             </div>

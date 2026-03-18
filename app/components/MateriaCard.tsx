@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined';
 import { EstadoMateria } from "../types";
 
 export interface DatosMateria {
@@ -42,9 +43,9 @@ const ETIQUETAS_ESTADO: Record<EstadoMateria, string> = {
 };
 
 const COLORES_ESTADO: Record<EstadoMateria, string> = {
-    pendiente: "text-slate-500",
-    regular: "text-amber-400",
-    aprobada: "text-emerald-400",
+    pendiente: "text-slate-500 dark:text-slate-500",
+    regular: "text-amber-600 dark:text-amber-400",
+    aprobada: "text-emerald-600 dark:text-emerald-400",
 };
 
 const SIGUIENTE_ESTADO: Record<EstadoMateria, EstadoMateria> = {
@@ -93,21 +94,24 @@ export default function MateriaCard({
         if (isSeleccionada || isDestacada) {
             switch (estado) {
                 case "aprobada":
-                    return "border-emerald-500 bg-[#0a1a14] shadow-[0_0_12px_rgba(52,211,153,0.3)]";
+                    return "border-emerald-500 bg-emerald-50 dark:bg-[#0a1a14] shadow-[0_0_12px_rgba(52,211,153,0.3)]";
                 case "regular":
-                    return "border-amber-500 bg-[#1a1508] shadow-[0_0_12px_rgba(251,191,36,0.3)]";
+                    return "border-amber-500 bg-amber-50 dark:bg-[#1a1508] shadow-[0_0_12px_rgba(251,191,36,0.3)]";
                 default:
-                    return "border-cyan-500/70 bg-[#0d1a2a] shadow-[0_0_14px_rgba(34,211,238,0.3)]";
+                    return "border-cyan-500/70 bg-cyan-50 dark:bg-[#0d1a2a] shadow-[0_0_14px_rgba(34,211,238,0.3)]";
             }
         }
 
         switch (estado) {
             case "aprobada":
-                return "border-emerald-500 bg-[#0a1a14]";
+                return "border-emerald-300 bg-emerald-50/80 backdrop-blur-sm dark:border-emerald-500 dark:bg-[#0a1a14]";
             case "regular":
-                return "border-amber-500 bg-[#1a1508]";
+                return "border-amber-300 bg-amber-50/80 backdrop-blur-sm dark:border-amber-500 dark:bg-[#1a1508]";
             default:
-                return "border-slate-600/40 bg-[#0f1520]";
+                if (isBloqueada) {
+                    return "border-slate-200 bg-slate-200/60 dark:border-slate-600/40 dark:bg-[#0f1520]/80";
+                }
+                return "border-blue-300 bg-slate-50/80 backdrop-blur-sm dark:border-slate-600/40 dark:bg-[#0f1520]";
         }
     };
 
@@ -128,21 +132,22 @@ export default function MateriaCard({
         w-full md:rounded-lg md:border-2 md:min-w-[140px] md:max-w-[400px] md:mx-auto md:px-3 md:py-2
         ${getEstilosEstado()}
         ${isAtenuada ? "opacity-20 blur-[2px]" : "opacity-100"}
-        ${isBloqueada ? "opacity-60 grayscale" : ""}
+        ${isBloqueada ? "opacity-60 grayscale backdrop-blur-sm" : ""}
+        ${isDestacada || isSeleccionada ? "z-20 shadow-xl" : "z-0"}
       `}
         >
             <div className="flex flex-col gap-0 h-full">
-                <span className="text-[8px] font-mono text-slate-400 md:text-[10px]">
+                <span className="text-[8px] font-mono text-slate-500 dark:text-slate-400 md:text-[10px]">
                     {codigoAMostrar}
                 </span>
 
                 {(!isOptativa || optativaDetalles) ? (
                     <>
-                        <span className="text-[10px] font-medium leading-tight text-slate-100 md:text-xs">
+                        <span className="text-[10px] font-medium leading-tight text-slate-800 dark:text-slate-100 md:text-xs">
                             {nombreAMostrar} {isBloqueada && (<LockOutlinedIcon fontSize="inherit" className="ml-1 text-slate-400 align-middle" />)}
                         </span>
                         {condicionAMostrar && (
-                            <span className="mt-0.5 text-[9px] text-slate-400 md:text-[10px]">
+                            <span className="mt-0.5 text-[9px] text-slate-500 dark:text-slate-400 md:text-[10px]">
                                 Req: {condicionAMostrar}
                             </span>
                         )}
@@ -156,7 +161,7 @@ export default function MateriaCard({
                                     onAbrirModalOptativa(materia.grupoOptativa, optativasPosibles);
                                 }
                             }}
-                            className="rounded-lg border border-cyan-500/50 bg-cyan-950/30 px-3 py-1.5 text-xs font-medium normal-case tracking-normal text-cyan-400 shadow-sm transition-colors hover:bg-cyan-900/40 hover:text-cyan-300 active:scale-95"
+                            className="rounded-lg border border-cyan-500/50 bg-cyan-50 px-3 py-1.5 text-xs font-medium normal-case tracking-normal text-cyan-700 shadow-sm transition-colors hover:bg-cyan-100 active:scale-95 dark:bg-cyan-950/30 dark:text-cyan-400 dark:hover:bg-cyan-900/40 dark:hover:text-cyan-300"
                         >
                             Elegir Optativa
                         </button>
@@ -178,13 +183,13 @@ export default function MateriaCard({
                                         onAbrirModalOptativa(materia.grupoOptativa, optativasPosibles);
                                     }
                                 }}
-                                className={`rounded px-1.5 py-0.5 text-[10px] font-serif font-bold italic
+                                className={`flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-serif font-bold italic
                   transition-colors border min-w-[24px] text-center md:rounded-md md:px-2.5 md:py-1 md:text-xs md:min-w-[36px]
-                  border-slate-600 text-slate-400 hover:bg-slate-700 hover:text-slate-200
+                  border-slate-300 text-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200
                 `}
                                 title="Cambiar optativa"
                             >
-                                ⚙
+                                <SettingsOutlinedIcon fontSize="inherit" />
                             </button>
                         )}
                         <button
@@ -195,20 +200,20 @@ export default function MateriaCard({
                                 }
                             }}
                             disabled={Boolean(isBloqueada || (isOptativa && !optativaDetalles))}
-                            className={`rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide 
+                            className={`flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide 
                   transition-colors border min-w-[24px] text-center md:rounded-md md:px-2.5 md:py-1 md:text-xs md:min-w-[36px]
                   ${(isBloqueada || (isOptativa && !optativaDetalles))
-                                    ? "border-slate-800 text-slate-600 cursor-not-allowed opacity-50"
+                                    ? "border-slate-200 text-slate-400 bg-slate-50 dark:border-slate-800 dark:text-slate-600 dark:bg-transparent cursor-not-allowed opacity-50"
                                     : estadoMostrar === "pendiente"
-                                        ? "border-slate-600 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+                                        ? "border-slate-300 text-slate-500 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
                                         : estadoMostrar === "regular"
-                                            ? "border-amber-600/50 text-amber-400 hover:bg-amber-900/30"
-                                            : "border-emerald-600/50 text-emerald-400 hover:bg-emerald-900/30"
+                                            ? "border-amber-300 text-amber-600 hover:bg-amber-50 dark:border-amber-600/50 dark:text-amber-400 dark:hover:bg-amber-900/30"
+                                            : "border-emerald-300 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-600/50 dark:text-emerald-400 dark:hover:bg-emerald-900/30"
                                 }
                 `}
                             title={isBloqueada ? "Materia bloqueada por correlativas" : `Cambiar a ${ETIQUETAS_ESTADO[SIGUIENTE_ESTADO[estadoMostrar]]}`}
                         >
-                            ⟳
+                            <SyncOutlinedIcon fontSize="inherit" />
                         </button>
                     </div>
                 </div>

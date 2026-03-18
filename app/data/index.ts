@@ -13,5 +13,12 @@ const carreras: Record<string, Carrera[]> = {
     naturales: carrerasNaturales,
 };
 
-// Forcing reload check
+export const FACULTAD_NOMBRES: Record<string, string> = {
+    "Facultad de Ciencias Jurídicas y Sociales": "Facultad de Ciencias Jurídicas",
+    "Facultad de Ingeniería": "Facultad de Ingeniería",
+    "Facultad de Ciencias Naturales y Ciencias de la Salud": "Facultad de Ciencias Naturales y Ciencias de la Salud",
+    "Facultad de Ciencias Económicas": "Facultad de Ciencias Económicas",
+    "Facultad de Humanidades": "Facultad de Humanidades y Ciencias Sociales",
+};
+
 export default carreras;
