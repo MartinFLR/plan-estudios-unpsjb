@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { getContributors } from "../actions";
 
 interface ModalInfoProps {
     isOpen: boolean;
@@ -45,8 +47,8 @@ export function ContactModal({ isOpen, onClose }: ModalInfoProps) {
                 <div className="flex items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-700/50">
                     <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 dark:text-slate-100">
                         <svg className="h-5 w-5 text-cyan-600 dark:text-cyan-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="20" height="16" x="2" y="4" rx="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <rect width="20" height="16" x="2" y="4" rx="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         Contacto
                     </h2>
@@ -56,7 +58,7 @@ export function ContactModal({ isOpen, onClose }: ModalInfoProps) {
                     <div className="flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-950/50">
                         <h3 className="font-semibold text-slate-800 dark:text-slate-200">¿Encontraste un error o tenés sugerencias?</h3>
                         <p className="text-slate-600 dark:text-slate-400">Podés reportar problemas o sugerir mejoras enviando un mail.</p>
-                        <button 
+                        <button
                             onClick={() => {
                                 navigator.clipboard.writeText("axelkevinagustinrojas@gmail.com");
                                 setCopied(true);
@@ -71,7 +73,7 @@ export function ContactModal({ isOpen, onClose }: ModalInfoProps) {
                                 </>
                             ) : (
                                 <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /></svg>
                                     axelkevinagustinrojas@gmail.com
                                 </>
                             )}
@@ -85,6 +87,8 @@ export function ContactModal({ isOpen, onClose }: ModalInfoProps) {
 
 export function CodeModal({ isOpen, onClose }: ModalInfoProps) {
     const dialogRef = useRef<HTMLDialogElement>(null);
+    const [contributors, setContributors] = useState<{ login: string; avatar_url: string; html_url: string }[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const dialog = dialogRef.current;
@@ -92,6 +96,17 @@ export function CodeModal({ isOpen, onClose }: ModalInfoProps) {
 
         if (isOpen) {
             dialog.showModal();
+            setIsLoading(true);
+            getContributors()
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        setContributors(data);
+                    }
+                    setIsLoading(false);
+                })
+                .catch(() => {
+                    setIsLoading(false);
+                });
         } else {
             dialog.close();
         }
@@ -116,31 +131,57 @@ export function CodeModal({ isOpen, onClose }: ModalInfoProps) {
             onClick={handleBackdropClick}
             className="backdrop:bg-black/60 backdrop:backdrop-blur-sm m-auto max-w-[90vw] w-full md:max-w-md rounded-xl md:rounded-2xl border border-slate-200 bg-white shadow-2xl open:animate-in open:zoom-in-95 open:fade-in-0 dark:border-slate-700/50 dark:bg-slate-900"
         >
-            <div className="flex flex-col gap-6 p-6 text-slate-800 dark:text-slate-200">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-700/50">
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 dark:text-slate-100">
-                        <svg className="h-5 w-5 text-slate-500 dark:text-slate-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
-                            <path d="M9 18c-4.51 2-5-2-7-2"/>
-                        </svg>
-                        Código Abierto
-                    </h2>
-                </div>
+            <div className="flex flex-col gap-2 p-6 text-slate-800 dark:text-slate-200">
+                <h2 className="text-lg font-bold text-slate-900 flex justify-center items-center dark:text-slate-100">
+                    Código Abierto
+                </h2>
+
 
                 <div className="flex flex-col gap-5 text-sm">
-                    <div className="flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-950/50">
-                        <h3 className="font-semibold text-slate-800 dark:text-slate-200">Código Abierto y Contribuciones</h3>
+                    <div className="flex flex-col items-center gap-2">
                         <p className="text-slate-600 dark:text-slate-400">El proyecto es open-source. Si querés contribuir o adaptar el sistema a tu institución, el código está disponible en GitHub.</p>
-                        <a 
-                            href="https://github.com/AxelRojas-hub/plan-estudios-unpsjb" 
+                        <a
+                            href="https://github.com/AxelRojas-hub/plan-estudios-unpsjb"
                             className="mt-2 flex w-fit items-center gap-2 rounded-md bg-slate-200 px-4 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-300 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
-                            target="_blank" 
+                            target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
                             Ver Repositorio
                         </a>
                     </div>
+                    <div className="flex flex-col items-center gap-3 border-t border-slate-100 pt-4 dark:border-slate-800/50">
+                        <p className="font-semibold text-slate-700 dark:text-slate-300">Colaboradores</p>
+                        <div className="flex flex-wrap justify-center gap-6">
+                            {isLoading ? (
+                                <div className="text-sm font-medium text-slate-500 animate-pulse">Cargando colaboradores...</div>
+                            ) : contributors.length > 0 ? (
+                                contributors.map((contributor) => (
+                                    <a
+                                        key={contributor.login}
+                                        href={contributor.html_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex flex-col items-center gap-2 group"
+                                    >
+                                        <Image
+                                            src={contributor.avatar_url}
+                                            alt={contributor.login}
+                                            width={56}
+                                            height={56}
+                                            className="h-14 w-14 rounded-full border-2 border-white shadow-sm ring-1 ring-slate-200 transition-all group-hover:ring-blue-400 dark:border-slate-900 dark:ring-slate-700 object-cover"
+                                        />
+                                        <span className="text-xs font-medium text-slate-600 transition-colors group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-slate-200">
+                                            {contributor.login}
+                                        </span>
+                                    </a>
+                                ))
+                            ) : (
+                                <div className="text-sm font-medium text-red-500 dark:text-red-400">No se pudieron cargar los colaboradores.</div>
+                            )}
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </dialog>
