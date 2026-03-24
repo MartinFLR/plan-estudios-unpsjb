@@ -84,18 +84,18 @@ export default function ListaPlan({
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto px-4 pb-24 md:pb-32 pt-6">
+        <div className="w-full max-w-5xl mx-auto px-0 md:px-4 pb-24 md:pb-32 pt-6">
             <div className="flex flex-col gap-12">
                 {aniosOrdenados.map((anio) => {
                     const cuatris = agrupadasPorAnio[anio];
                     const periodosAMostrar = [0, 1, 2].filter(c => cuatris[c].length > 0);
 
                     return (
-                        <div key={anio} className="flex flex-col border-l-4 border-cyan-500/30 pl-4 md:pl-6">
-                            <h2 className="text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-400 mb-6">
+                        <div key={anio} className="flex flex-col md:border-l-4 md:border-cyan-500/30 md:pl-6">
+                            <h2 className="text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-400 mb-4 md:mb-6 px-4 md:px-0">
                                 {anio}° AÑO
                             </h2>
-                            <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div className="overflow-x-auto md:rounded-lg border-y md:border-x border-slate-200 dark:border-slate-800 shadow-sm">
                                 <table className="w-full text-left text-sm text-slate-600 dark:text-slate-400">
                                     <thead className="bg-slate-50 text-xs uppercase text-slate-700 dark:bg-slate-800/80 dark:text-slate-300">
                                         <tr>
