@@ -5,6 +5,7 @@ import type { Carrera } from "./types";
 import { useProgresoUsuario } from "./hooks/useProgresoUsuario";
 import Header from "./components/Header";
 import DiagramaPlan from "./components/DiagramaPlan";
+import ListaPlan from "./components/ListaPlan";
 import ModalBienvenida from "./components/ModalBienvenida";
 import carrerasPorFacultad from "./data";
 import WidgetProgreso from "./components/WidgetProgreso";
@@ -26,6 +27,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [showBienvenida, setShowBienvenida] = useState(false);
   const [carreraVista, setCarreraVista] = useState<string | undefined | null>(undefined);
+  const [vistaModo, setVistaModo] = useState<"diagrama" | "lista">("diagrama");
 
   useEffect(() => {
     setMounted(true);
@@ -63,18 +65,31 @@ export default function Home() {
         carreraSeleccionada={carreraSeleccionada}
         onSeleccionarCarrera={(c) => setCarreraVista(c.nombre)}
         onLimpiarCarrera={() => setCarreraVista(null)}
+        vistaModo={vistaModo}
+        onCambiarVista={setVistaModo}
       />
 
       {carreraSeleccionada ? (
         <>
-          <DiagramaPlan
-            materias={carreraSeleccionada.materias}
-            getEstado={getEstado}
-            handleCicloEstado={handleCicloEstado}
-            estaDesbloqueada={(codigo) => estaDesbloqueada(codigo, carreraSeleccionada.materias)}
-            getOptativaElegida={getOptativaElegida}
-            setOptativaElegida={setOptativaElegida}
-          />
+          {vistaModo === "diagrama" ? (
+            <DiagramaPlan
+              materias={carreraSeleccionada.materias}
+              getEstado={getEstado}
+              handleCicloEstado={handleCicloEstado}
+              estaDesbloqueada={(codigo) => estaDesbloqueada(codigo, carreraSeleccionada.materias)}
+              getOptativaElegida={getOptativaElegida}
+              setOptativaElegida={setOptativaElegida}
+            />
+          ) : (
+            <ListaPlan
+              materias={carreraSeleccionada.materias}
+              getEstado={getEstado}
+              handleCicloEstado={handleCicloEstado}
+              estaDesbloqueada={(codigo) => estaDesbloqueada(codigo, carreraSeleccionada.materias)}
+              getOptativaElegida={getOptativaElegida}
+              setOptativaElegida={setOptativaElegida}
+            />
+          )}
           {carreraSeleccionada.requisitos && carreraSeleccionada.requisitos.length > 0 && (
             <SeccionRequisitos
               requisitos={carreraSeleccionada.requisitos}

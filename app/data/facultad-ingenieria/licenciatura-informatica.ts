@@ -36,7 +36,7 @@ const licenciaturaInformatica: Carrera = {
 
         { codigo: "OP1", nombre: "Optativa I", año: 5, cuatrimestre: 1, correlativas: [], cargaHoraria: 120, esOptativa: true, grupoOptativa: "optativa1" },
         { codigo: "IF021", nombre: "Arquitectura de Redes y Servicios", año: 5, cuatrimestre: 1, correlativas: ["IF019"], cargaHoraria: 120 },
-        { codigo: "IF017", nombre: "Taller de Nuevas Tecnologías", año: 5, cuatrimestre: 2, correlativas: ["IF015", "IF019"], cargaHoraria: 90 },
+        { codigo: "IF017", nombre: "Taller de Nuevas Tecnologías", año: 5, cuatrimestre: 1, correlativas: ["IF015", "IF019"], cargaHoraria: 90 },
         { codigo: "OP2", nombre: "Optativa II", año: 5, cuatrimestre: 2, correlativas: [], cargaHoraria: 135, esOptativa: true, grupoOptativa: "optativa2" },
         { codigo: "IF025", nombre: "Sistemas Embebidos de Tiempo Real", año: 5, cuatrimestre: 2, correlativas: ["IF015", "IF022"], cargaHoraria: 120 },
 

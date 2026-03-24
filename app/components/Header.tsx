@@ -5,12 +5,16 @@ import type { Carrera } from "../types";
 import { ContactModal, CodeModal } from "./ModalInfo";
 import { FACULTAD_NOMBRES } from "../data";
 import { ThemeToggle } from "./ThemeToggle";
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 
 export interface HeaderProps {
     carreras: Carrera[];
     carreraSeleccionada: Carrera | null;
     onSeleccionarCarrera: (carrera: Carrera) => void;
     onLimpiarCarrera?: () => void;
+    vistaModo?: "diagrama" | "lista";
+    onCambiarVista?: (vista: "diagrama" | "lista") => void;
 }
 
 export default function Header({
@@ -18,6 +22,8 @@ export default function Header({
     carreraSeleccionada,
     onSeleccionarCarrera,
     onLimpiarCarrera,
+    vistaModo = "diagrama",
+    onCambiarVista,
 }: HeaderProps) {
     const facultades = [...new Set(carreras.map((c) => c.facultad))].sort((a, b) =>
         (FACULTAD_NOMBRES[a] || a).localeCompare(FACULTAD_NOMBRES[b] || b, "es")
@@ -130,6 +136,33 @@ export default function Header({
                     <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
                 </div>
             </div>
+
+            {carreraSeleccionada && onCambiarVista && (
+                <div className="flex w-full border-t border-slate-200 dark:border-slate-700/50">
+                    <button
+                        onClick={() => onCambiarVista('diagrama')}
+                        className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+                            vistaModo === 'diagrama'
+                                ? 'border-b-2 border-cyan-500 text-cyan-700 dark:text-cyan-400 bg-slate-50 dark:bg-slate-800/40'
+                                : 'border-b-2 border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800/30 dark:hover:text-slate-200'
+                        }`}
+                    >
+                        <AccountTreeOutlinedIcon fontSize="small" />
+                        Diagrama
+                    </button>
+                    <button
+                        onClick={() => onCambiarVista('lista')}
+                        className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+                            vistaModo === 'lista'
+                                ? 'border-b-2 border-cyan-500 text-cyan-700 dark:text-cyan-400 bg-slate-50 dark:bg-slate-800/40'
+                                : 'border-b-2 border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800/30 dark:hover:text-slate-200'
+                        }`}
+                    >
+                        <FormatListBulletedOutlinedIcon fontSize="small" />
+                        Lista
+                    </button>
+                </div>
+            )}
         </header>
     );
 }
