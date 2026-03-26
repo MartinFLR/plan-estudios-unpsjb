@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "android:build": "pnpm build && pnpm exec cap sync android && cd android && ./gradlew assembleDebug",
+    "android:bundle": "pnpm build && pnpm exec cap sync android && cd android && ./gradlew bundleRelease",
     "ios:build": "pnpm build && pnpm exec cap sync ios && cd ios/App && xcodebuild -workspace App.xcworkspace -scheme App -sdk iphoneos -configuration Debug"
   },
   "dependencies": {

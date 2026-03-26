@@ -26,6 +26,24 @@ El proyecto estará disponible en [http://localhost:3000](http://localhost:3000)
 
 ---
 
+## 📱 Desarrollo Mobile
+
+Si querés compilar la aplicación para **Android** o **iOS**, seguí estos requisitos adicionales:
+
+### Requisitos:
+- **Java 21**: Es obligatorio para las últimas versiones de Capacitor.
+- **Android SDK**: Tenés que tener instalado Android Studio.
+- **Variable de Entorno**: Recomendamos configurar `ANDROID_HOME` en tu sistema apuntando a la ruta de tu SDK. Si no, debés crear un archivo `android/local.properties` con `sdk.dir=RUTA_A_TU_SDK`.
+
+### Comandos de Build:
+- **Android (Debug)**: `pnpm run android:build` (Genera el APK de prueba).
+- **Android (Production)**: `pnpm run android:bundle` (Genera el .aab para Play Store).
+- **iOS**: `pnpm run ios:build` (Solo en macOS con Xcode).
+
+---
+
+---
+
 ## Cómo instalarlo y personalizarlo para tu Institución
 
 Este proyecto fue pensado para que cualquier institución educativa lo pueda adaptar fácilmente aportando sus propios planes de estudio.
