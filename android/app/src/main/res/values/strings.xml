@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Plan de Estudios UNPSJB</string>
+    <string name="title_activity_main">Plan de Estudios UNPSJB</string>
+    <string name="package_name">com.planestudios.unpsjb</string>
+    <string name="custom_url_scheme">com.planestudios.unpsjb</string>
+</resources>

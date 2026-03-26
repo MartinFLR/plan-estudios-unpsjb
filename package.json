@@ -6,9 +6,15 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "android:build": "pnpm build && pnpm exec cap sync android && cd android && ./gradlew assembleDebug",
+    "ios:build": "pnpm build && pnpm exec cap sync ios && cd ios/App && xcodebuild -workspace App.xcworkspace -scheme App -sdk iphoneos -configuration Debug"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/ios": "^8.3.0",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",

@@ -1,10 +1,9 @@
-"use server";
+// Removed "use server" to support static export
 
 export async function getContributors() {
     try {
         const response = await fetch(
-            "https://api.github.com/repos/AxelRojas-hub/plan-estudios-unpsjb/contributors",
-            { next: { revalidate: 86400 } }
+            "https://api.github.com/repos/AxelRojas-hub/plan-estudios-unpsjb/contributors"
         );
 
         if (!response.ok) {
